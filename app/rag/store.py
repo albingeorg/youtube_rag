@@ -59,6 +59,7 @@ class VideoStore:
 
     def __init__(self):
         self._store: dict[str, VideoEntry] = {}
+        self._chat_history: dict[str, list[dict]] = {}
 
     def exists(self, video_id: str) -> bool:
         return video_id in self._store
@@ -82,6 +83,7 @@ class VideoStore:
     def delete(self, video_id: str) -> bool:
         if video_id in self._store:
             del self._store[video_id]
+            self.delete_chat_history(video_id)
             logger.info(f"Deleted video '{video_id}' from store")
             return True
         return False
@@ -91,3 +93,25 @@ class VideoStore:
 
     def count(self) -> int:
         return len(self._store)
+
+    def get_chat_history(self, video_id: str) -> list[dict]:
+        """Retrieves chat history for a video, returns empty list if none."""
+        return self._chat_history.get(video_id, [])
+
+    def set_chat_history(self, video_id: str, history: list[dict]):
+        """Saves or overwrites the chat history for a video."""
+        self._chat_history[video_id] = history
+        logger.info(
+            f"Saved chat history for video '{video_id}' ({len(history)} messages)"
+        )
+
+    def delete_chat_history(self, video_id: str):
+        """Deletes chat history for a video if it exists."""
+        if video_id in self._chat_history:
+            del self._chat_history[video_id]
+            logger.info(f"Deleted chat history for video '{video_id}'")
+
+
+# Create a single global instance of the store
+# This will be shared across all API requests
+vector_store = VideoStore()

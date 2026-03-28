@@ -6,7 +6,7 @@ Routes for video processing and management.
 
 from fastapi import APIRouter, Depends
 
-from app.api.dependencies import get_video_service, get_store
+from app.api.dependencies import get_video_service, get_vector_store
 from app.api.schemas import (
     ProcessVideoRequest,
     ProcessVideoResponse,
@@ -28,7 +28,7 @@ router = APIRouter(prefix="/videos", tags=["Videos"])
 async def process_video(
     body: ProcessVideoRequest,
     svc: VideoService = Depends(get_video_service),
-    store: VideoStore = Depends(get_store),
+    store: VideoStore = Depends(get_vector_store),
 ):
     """
     Fetch transcript, chunk, index, and store a YouTube video.
@@ -52,7 +52,7 @@ async def process_video(
     response_model=list[VideoSummary],
     summary="List all indexed videos",
 )
-async def list_videos(store: VideoStore = Depends(get_store)):
+async def list_videos(store: VideoStore = Depends(get_vector_store)):
     """Return all currently indexed videos."""
     return store.list_all()
 
@@ -64,7 +64,7 @@ async def list_videos(store: VideoStore = Depends(get_store)):
 )
 async def delete_video(
     video_id: str,
-    store: VideoStore = Depends(get_store),
+    store: VideoStore = Depends(get_vector_store),
 ):
     """Delete a video from the index by its ID."""
     if not store.delete(video_id):

@@ -70,3 +70,10 @@ class HealthResponse(BaseModel):
     status: str
     version: str
     videos_indexed: int
+
+
+class ChatMessage(BaseModel):
+    role: str
+    text: str
+    sources: list[str] | None = None
+    time: str | None = None

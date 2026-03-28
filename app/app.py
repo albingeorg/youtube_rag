@@ -18,6 +18,7 @@ from app.core.logging import setup_logging, get_logger
 from app.api.routes.videos import router as videos_router
 from app.api.routes.qa import router as qa_router
 from app.api.routes.health import router as health_router
+from app.api.routes.history import router as history_router
 from app.rag.store import VideoStore
 from app.services.llm import LLMService
 from app.services.video import VideoService
@@ -84,6 +85,7 @@ def create_app() -> FastAPI:
     app.include_router(health_router,  prefix="/api")
     app.include_router(videos_router,  prefix="/api")
     app.include_router(qa_router,      prefix="/api")
+    app.include_router(history_router, prefix="/api/history")
 
     # ── Static files + SPA catch-all ─────────────────────────────
     app.mount("/static", StaticFiles(directory="static"), name="static")

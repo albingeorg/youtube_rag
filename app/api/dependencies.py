@@ -7,7 +7,7 @@ from app.services.llm import LLMService
 from app.services.video import VideoService
 
 
-def get_store(request: Request) -> VideoStore:
+def get_vector_store(request: Request) -> VideoStore:
 	return request.app.state.store
 
 
